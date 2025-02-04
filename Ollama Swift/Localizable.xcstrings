@@ -5,6 +5,7 @@
 
     },
     "%.3f GB" : {
+      "extractionState" : "stale",
       "localizations" : {
         "pt-BR" : {
           "stringUnit" : {
@@ -71,6 +72,9 @@
           }
         }
       }
+    },
+    "Chat" : {
+
     },
     "Connected" : {
       "localizations" : {
@@ -295,6 +299,9 @@
         }
       }
     },
+    "Ollama Swift" : {
+
+    },
     "Online" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -352,6 +359,9 @@
         }
       }
     },
+    "Select an option" : {
+
+    },
     "Select photo" : {
       "localizations" : {
         "pt-BR" : {
@@ -388,6 +398,9 @@
           }
         }
       }
+    },
+    "Settings" : {
+
     },
     "This is the start of your chat" : {
       "localizations" : {
