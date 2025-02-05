@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -36,6 +36,7 @@
 		32D730C92AD5FB8200DF8044 /* ErrorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32D730C82AD5FB8200DF8044 /* ErrorModel.swift */; };
 		32DCE6BB2ADB090500A24528 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32DCE6BA2ADB090500A24528 /* ContentView.swift */; };
 		64E569892B23CE4D00B87CD6 /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = 64E569882B23CE4D00B87CD6 /* MarkdownUI */; };
+		A7B12F8F2D53DC2200CD7C71 /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7B12F8E2D53DC1C00CD7C71 /* ThemeManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -88,7 +89,12 @@
 		32D730C62AD3F77100DF8044 /* ChatBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBubble.swift; sourceTree = "<group>"; };
 		32D730C82AD5FB8200DF8044 /* ErrorModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorModel.swift; sourceTree = "<group>"; };
 		32DCE6BA2ADB090500A24528 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		A7B12F8E2D53DC1C00CD7C71 /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		A7B12F902D53E46000CD7C71 /* Components */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Components; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		327B90402AD17EA300A94F10 /* Frameworks */ = {
@@ -139,6 +145,7 @@
 		327B90452AD17EA300A94F10 /* Ollama Swift */ = {
 			isa = PBXGroup;
 			children = (
+				A7B12F902D53E46000CD7C71 /* Components */,
 				32CDC0262AD2B6E300D4DA6B /* Utils */,
 				32CDC01F2AD2B4BD00D4DA6B /* Views */,
 				32CDC01E2AD2B4B700D4DA6B /* Controllers */,
@@ -204,6 +211,7 @@
 			isa = PBXGroup;
 			children = (
 				32CDC02B2AD2DE7600D4DA6B /* MenuView.swift */,
+				A7B12F8E2D53DC1C00CD7C71 /* ThemeManager.swift */,
 				32CDC02F2AD2DED600D4DA6B /* ChatView.swift */,
 				3271CD122ADAD23400B14DD2 /* SettingsView.swift */,
 				320EE92B2ADAE7DE00758FB9 /* ManageModelsView.swift */,
@@ -240,6 +248,9 @@
 			buildRules = (
 			);
 			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				A7B12F902D53E46000CD7C71 /* Components */,
 			);
 			name = "Ollama Swift";
 			packageProductDependencies = (
@@ -386,6 +397,7 @@
 				327B90472AD17EA300A94F10 /* Ollama_SwiftApp.swift in Sources */,
 				32CDC0252AD2B59700D4DA6B /* Response.swift in Sources */,
 				32CDC0282AD2B70000D4DA6B /* NetworkErrors.swift in Sources */,
+				A7B12F8F2D53DC2200CD7C71 /* ThemeManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

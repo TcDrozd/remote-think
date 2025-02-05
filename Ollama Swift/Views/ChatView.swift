@@ -43,6 +43,11 @@ struct ChatView: View {
                             .textSelection(.enabled)
                             .background(Color.blue)
                         }
+                        .background(ThemeManager.shared.accentColor)
+                        .clipShape(RoundedRectangle(
+                            cornerRadius: ThemeManager.shared.messageCornerRadius,
+                            style: .continuous
+                            ))
                         ChatBubble(direction: .left) {
                             Markdown {
                                 .init(chatController.receivedResponse.indices.contains(idx) ?
@@ -67,10 +72,21 @@ struct ChatView: View {
                             .foregroundStyle(Color.secondary)
                             .background(Color(NSColor.secondarySystemFill))
                         }
+                        .clipShape(RoundedRectangle(
+                            cornerRadius: ThemeManager.shared.messageCornerRadius,
+                            style: .continuous
+                            ))
+                        .transition(.asymmetric(
+                            insertion: .push(from: .trailing),
+                            removal: .push(from: .leading)
+                        ))
                     }
+                    .animation(.spring(), value: chatController.sentPrompt)
                     Text("")
                         .id(bottomId)
                 }
+                .scrollIndicators(.visible) // macOS 13+
+                .scrollContentBackground(.hidden)
                 .onChange(of: chatController.receivedResponse.last) { _, _ in
                     sv.scrollTo(bottomId)
                     
@@ -139,7 +155,7 @@ struct ChatView: View {
                 HStack(){
                     ZStack(alignment: .topLeading) {
                         if chatController.prompt.prompt.isEmpty {
-                            Text("Enter prompt...")
+                            Text("CMD + Enter prompt...")
                                 .foregroundColor(Color.gray)
                                 .padding(.leading, 10)
                         }

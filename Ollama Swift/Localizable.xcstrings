@@ -5,7 +5,6 @@
 
     },
     "%.3f GB" : {
-      "extractionState" : "stale",
       "localizations" : {
         "pt-BR" : {
           "stringUnit" : {
@@ -76,6 +75,9 @@
     "Chat" : {
 
     },
+    "CMD + Enter prompt..." : {
+
+    },
     "Connected" : {
       "localizations" : {
         "pt-BR" : {
@@ -119,6 +121,7 @@
       }
     },
     "Enter prompt..." : {
+      "extractionState" : "stale",
       "localizations" : {
         "pt-BR" : {
           "stringUnit" : {
@@ -280,6 +283,7 @@
       }
     },
     "New Tab" : {
+      "extractionState" : "stale",
       "localizations" : {
         "pt-BR" : {
           "stringUnit" : {
