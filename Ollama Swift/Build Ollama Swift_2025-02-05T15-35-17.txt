@@ -1,0 +1,21 @@
+
+Showing Recent Issues
+
+Prepare build
+error: Multiple commands produce '/Users/tdrozd/Library/Developer/Xcode/DerivedData/Ollama_Swift-fsmajanwphnhaldkgwbryuipkmqk/Build/Intermediates.noindex/Ollama Swift.build/Debug/Ollama Swift.build/Objects-normal/arm64/ChatBubble.stringsdata'
+    note: Target 'Ollama Swift' (project 'Ollama Swift') has Swift tasks not blocking downstream targets
+    note: Target 'Ollama Swift' (project 'Ollama Swift') has Swift tasks not blocking downstream targets
+
+
+Multiple commands produce '/Users/tdrozd/Library/Developer/Xcode/DerivedData/Ollama_Swift-fsmajanwphnhaldkgwbryuipkmqk/Build/Intermediates.noindex/Ollama Swift.build/Debug/Ollama Swift.build/Objects-normal/arm64/ChatBubble.stringsdata'
+
+
+Build target Ollama Swift of project Ollama Swift with configuration Debug
+warning: duplicate output file '/Users/tdrozd/Library/Developer/Xcode/DerivedData/Ollama_Swift-fsmajanwphnhaldkgwbryuipkmqk/Build/Intermediates.noindex/Ollama Swift.build/Debug/Ollama Swift.build/Objects-normal/arm64/ChatBubble.stringsdata' on task: SwiftDriver Compilation Ollama Swift normal arm64 com.apple.xcode.tools.swift.compiler (in target 'Ollama Swift' from project 'Ollama Swift')
+
+
+duplicate output file '/Users/tdrozd/Library/Developer/Xcode/DerivedData/Ollama_Swift-fsmajanwphnhaldkgwbryuipkmqk/Build/Intermediates.noindex/Ollama Swift.build/Debug/Ollama Swift.build/Objects-normal/arm64/ChatBubble.stringsdata' on task: SwiftDriver Compilation Ollama Swift normal arm64 com.apple.xcode.tools.swift.compiler
+
+
+
+Build failed    2/5/25, 3:35 PM    0.2 seconds

@@ -35,7 +35,7 @@
 		32D730C72AD3F77100DF8044 /* ChatBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32D730C62AD3F77100DF8044 /* ChatBubble.swift */; };
 		32D730C92AD5FB8200DF8044 /* ErrorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32D730C82AD5FB8200DF8044 /* ErrorModel.swift */; };
 		32DCE6BB2ADB090500A24528 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32DCE6BA2ADB090500A24528 /* ContentView.swift */; };
-		64E569892B23CE4D00B87CD6 /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = 64E569882B23CE4D00B87CD6 /* MarkdownUI */; };
+		A710C7A32D5400F800AEB9EB /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A710C7A22D5400F800AEB9EB /* Info.plist */; };
 		A7B12F8F2D53DC2200CD7C71 /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7B12F8E2D53DC1C00CD7C71 /* ThemeManager.swift */; };
 /* End PBXBuildFile section */
 
@@ -89,6 +89,7 @@
 		32D730C62AD3F77100DF8044 /* ChatBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBubble.swift; sourceTree = "<group>"; };
 		32D730C82AD5FB8200DF8044 /* ErrorModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorModel.swift; sourceTree = "<group>"; };
 		32DCE6BA2ADB090500A24528 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		A710C7A22D5400F800AEB9EB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A7B12F8E2D53DC1C00CD7C71 /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -101,7 +102,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				64E569892B23CE4D00B87CD6 /* MarkdownUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -155,6 +155,7 @@
 				327B904F2AD17EA400A94F10 /* Ollama_Swift.entitlements */,
 				327B904C2AD17EA400A94F10 /* Preview Content */,
 				32405D8A2ADB181A00EAAC10 /* Localizable.xcstrings */,
+				A710C7A22D5400F800AEB9EB /* Info.plist */,
 			);
 			path = "Ollama Swift";
 			sourceTree = "<group>";
@@ -254,7 +255,6 @@
 			);
 			name = "Ollama Swift";
 			packageProductDependencies = (
-				64E569882B23CE4D00B87CD6 /* MarkdownUI */,
 			);
 			productName = "Ollama Swift";
 			productReference = 327B90432AD17EA300A94F10 /* Ollama Swift.app */;
@@ -331,7 +331,7 @@
 			);
 			mainGroup = 327B903A2AD17EA300A94F10;
 			packageReferences = (
-				64E569872B23CE4D00B87CD6 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */,
+				A710C7A52D5402D100AEB9EB /* XCRemoteSwiftPackageReference "MarkdownUI" */,
 			);
 			productRefGroup = 327B90442AD17EA300A94F10 /* Products */;
 			projectDirPath = "";
@@ -349,6 +349,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A710C7A32D5400F800AEB9EB /* Info.plist in Resources */,
 				327B904E2AD17EA400A94F10 /* Preview Assets.xcassets in Resources */,
 				327B904B2AD17EA400A94F10 /* Assets.xcassets in Resources */,
 				32405D8B2ADB181A00EAAC10 /* Localizable.xcstrings in Resources */,
@@ -569,7 +570,8 @@
 				DEVELOPMENT_TEAM = 9WNUC8T5K7;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Ollama SwiftUI";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -578,7 +580,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 2.0.1;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.kghandour.Ollama-Swift";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.tcdrozd.Ollama-Swift";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -599,7 +601,8 @@
 				DEVELOPMENT_TEAM = 9WNUC8T5K7;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Ollama SwiftUI";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -608,7 +611,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 2.0.1;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.kghandour.Ollama-Swift";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.tcdrozd.Ollama-Swift";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -729,23 +732,15 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		64E569872B23CE4D00B87CD6 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */ = {
+		A710C7A52D5402D100AEB9EB /* XCRemoteSwiftPackageReference "MarkdownUI" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/gonzalezreal/swift-markdown-ui";
+			repositoryURL = "https://github.com/apparata/MarkdownUI";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 2.2.0;
+				minimumVersion = 0.9.1;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		64E569882B23CE4D00B87CD6 /* MarkdownUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 64E569872B23CE4D00B87CD6 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */;
-			productName = MarkdownUI;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 327B903B2AD17EA300A94F10 /* Project object */;
 }

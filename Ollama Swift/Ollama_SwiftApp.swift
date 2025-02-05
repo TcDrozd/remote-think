@@ -12,6 +12,7 @@ struct Ollama_SwiftApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(ThemeManager.shared)
         }
         .windowToolbarStyle(.unified(showsTitle: true))
         .windowStyle(.titleBar)

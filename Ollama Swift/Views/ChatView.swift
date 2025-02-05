@@ -25,62 +25,19 @@ struct ChatView: View {
                         .foregroundStyle(.secondary)
                         .padding()
                     ForEach(Array(chatController.sentPrompt.enumerated()), id: \.offset) { idx, sent in
-                        ChatBubble(direction: .right) {
-                            VStack{
-                                chatController.sentImages[idx]?
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 150, height: 150)
-                                Markdown {
-                                    .init(sent.trimmingCharacters(in: .whitespacesAndNewlines))
-                                }
-                                .markdownTextStyle{
-                                    ForegroundColor(Color.white)
-                                }
-                            }
-                            .padding([.leading, .trailing])
-                            .padding([.top, .bottom], 8)
-                            .textSelection(.enabled)
-                            .background(Color.blue)
-                        }
-                        .background(ThemeManager.shared.accentColor)
-                        .clipShape(RoundedRectangle(
-                            cornerRadius: ThemeManager.shared.messageCornerRadius,
-                            style: .continuous
-                            ))
-                        ChatBubble(direction: .left) {
-                            Markdown {
-                                .init(chatController.receivedResponse.indices.contains(idx) ?
-                                      chatController.receivedResponse[idx].trimmingCharacters(in: .whitespacesAndNewlines) :
-                                        "...")
-                            }
-                            .markdownTextStyle(\.code) {
-                                FontFamilyVariant(.monospaced)
-                                BackgroundColor(.white.opacity(0.25))
-                            }
-                            .markdownBlockStyle(\.codeBlock) { configuration in
-                                configuration.label
-                                    .padding()
-                                    .markdownTextStyle {
-                                        FontFamilyVariant(.monospaced)
-                                    }
-                                    .background(Color.white.opacity(0.25))
-                            }
-                            .padding([.leading, .trailing])
-                            .padding([.top, .bottom], 8)
-                            .textSelection(.enabled)
-                            .foregroundStyle(Color.secondary)
-                            .background(Color(NSColor.secondarySystemFill))
-                        }
-                        .clipShape(RoundedRectangle(
-                            cornerRadius: ThemeManager.shared.messageCornerRadius,
-                            style: .continuous
-                            ))
-                        .transition(.asymmetric(
-                            insertion: .push(from: .trailing),
-                            removal: .push(from: .leading)
-                        ))
-                    }
+                        // Replace existing ChatBubble code with:
+                        ChatBubble(
+                            content: sent.trimmingCharacters(in: .whitespacesAndNewlines),
+                            direction: .outgoing,
+                            image: chatController.sentImages[idx]
+                        )
+
+                        ChatBubble(
+                            content: chatController.receivedResponse.indices.contains(idx) ?
+                                chatController.receivedResponse[idx].trimmingCharacters(in: .whitespacesAndNewlines) : "...",
+                            direction: .incoming,
+                            image: nil
+                        )                    }
                     .animation(.spring(), value: chatController.sentPrompt)
                     Text("")
                         .id(bottomId)
