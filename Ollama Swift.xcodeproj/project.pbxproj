@@ -32,10 +32,10 @@
 		32CDC0302AD2DED600D4DA6B /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32CDC02F2AD2DED600D4DA6B /* ChatView.swift */; };
 		32CDC0322AD2DF4200D4DA6B /* ChatController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32CDC0312AD2DF4200D4DA6B /* ChatController.swift */; };
 		32CDC0342AD2F93700D4DA6B /* Tags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32CDC0332AD2F93700D4DA6B /* Tags.swift */; };
-		32D730C72AD3F77100DF8044 /* ChatBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32D730C62AD3F77100DF8044 /* ChatBubble.swift */; };
 		32D730C92AD5FB8200DF8044 /* ErrorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32D730C82AD5FB8200DF8044 /* ErrorModel.swift */; };
 		32DCE6BB2ADB090500A24528 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32DCE6BA2ADB090500A24528 /* ContentView.swift */; };
 		A710C7A32D5400F800AEB9EB /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A710C7A22D5400F800AEB9EB /* Info.plist */; };
+		A72AAA2F2D569E9900DABC46 /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = A72AAA2E2D569E9900DABC46 /* MarkdownUI */; };
 		A7B12F8F2D53DC2200CD7C71 /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7B12F8E2D53DC1C00CD7C71 /* ThemeManager.swift */; };
 /* End PBXBuildFile section */
 
@@ -86,7 +86,6 @@
 		32CDC02F2AD2DED600D4DA6B /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		32CDC0312AD2DF4200D4DA6B /* ChatController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatController.swift; sourceTree = "<group>"; };
 		32CDC0332AD2F93700D4DA6B /* Tags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tags.swift; sourceTree = "<group>"; };
-		32D730C62AD3F77100DF8044 /* ChatBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBubble.swift; sourceTree = "<group>"; };
 		32D730C82AD5FB8200DF8044 /* ErrorModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorModel.swift; sourceTree = "<group>"; };
 		32DCE6BA2ADB090500A24528 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		A710C7A22D5400F800AEB9EB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -102,6 +101,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A72AAA2F2D569E9900DABC46 /* MarkdownUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -128,7 +128,9 @@
 				327B90452AD17EA300A94F10 /* Ollama Swift */,
 				327B90572AD17EA400A94F10 /* Ollama SwiftTests */,
 				327B90612AD17EA400A94F10 /* Ollama SwiftUITests */,
+				A76C21272D5675C30013E6FD /* Frameworks */,
 				327B90442AD17EA300A94F10 /* Products */,
+				A710C7A22D5400F800AEB9EB /* Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -155,7 +157,6 @@
 				327B904F2AD17EA400A94F10 /* Ollama_Swift.entitlements */,
 				327B904C2AD17EA400A94F10 /* Preview Content */,
 				32405D8A2ADB181A00EAAC10 /* Localizable.xcstrings */,
-				A710C7A22D5400F800AEB9EB /* Info.plist */,
 			);
 			path = "Ollama Swift";
 			sourceTree = "<group>";
@@ -227,12 +228,18 @@
 				32CDC0272AD2B70000D4DA6B /* NetworkErrors.swift */,
 				32CDC0292AD2DD9200D4DA6B /* Menu.swift */,
 				32CDC02D2AD2DEA500D4DA6B /* JSONParser.swift */,
-				32D730C62AD3F77100DF8044 /* ChatBubble.swift */,
 				3271CD102ADAC94500B14DD2 /* ErrorMessages.swift */,
 				327A09212BA5DF720045D889 /* DefaultValues.swift */,
 				32A488B52BA8505D0097EB49 /* NSImage.swift */,
 			);
 			path = Utils;
+			sourceTree = "<group>";
+		};
+		A76C21272D5675C30013E6FD /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -255,6 +262,7 @@
 			);
 			name = "Ollama Swift";
 			packageProductDependencies = (
+				A72AAA2E2D569E9900DABC46 /* MarkdownUI */,
 			);
 			productName = "Ollama Swift";
 			productReference = 327B90432AD17EA300A94F10 /* Ollama Swift.app */;
@@ -331,7 +339,7 @@
 			);
 			mainGroup = 327B903A2AD17EA300A94F10;
 			packageReferences = (
-				A710C7A52D5402D100AEB9EB /* XCRemoteSwiftPackageReference "MarkdownUI" */,
+				A72AAA2D2D569E9900DABC46 /* XCLocalSwiftPackageReference "../MarkdownUI" */,
 			);
 			productRefGroup = 327B90442AD17EA300A94F10 /* Products */;
 			projectDirPath = "";
@@ -379,7 +387,6 @@
 			files = (
 				32D730C92AD5FB8200DF8044 /* ErrorModel.swift in Sources */,
 				32CDC0322AD2DF4200D4DA6B /* ChatController.swift in Sources */,
-				32D730C72AD3F77100DF8044 /* ChatBubble.swift in Sources */,
 				32CDC0212AD2B50600D4DA6B /* MenuItem.swift in Sources */,
 				32A488B62BA8505D0097EB49 /* NSImage.swift in Sources */,
 				320EE92E2ADAED4F00758FB9 /* ManageModelsController.swift in Sources */,
@@ -489,6 +496,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = "/Users/tdrozd/Documents/Projects/Ollama-SwiftUI/Ollama Swift/Info.plist";
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
@@ -497,6 +505,7 @@
 				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
 			};
 			name = Debug;
 		};
@@ -547,12 +556,14 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = "/Users/tdrozd/Documents/Projects/Ollama-SwiftUI/Ollama Swift/Info.plist";
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_VERSION = 6.0;
 			};
 			name = Release;
 		};
@@ -731,16 +742,19 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCRemoteSwiftPackageReference section */
-		A710C7A52D5402D100AEB9EB /* XCRemoteSwiftPackageReference "MarkdownUI" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/apparata/MarkdownUI";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.9.1;
-			};
+/* Begin XCLocalSwiftPackageReference section */
+		A72AAA2D2D569E9900DABC46 /* XCLocalSwiftPackageReference "../MarkdownUI" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../MarkdownUI;
 		};
-/* End XCRemoteSwiftPackageReference section */
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A72AAA2E2D569E9900DABC46 /* MarkdownUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MarkdownUI;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 327B903B2AD17EA300A94F10 /* Project object */;
 }

@@ -12,6 +12,7 @@ struct ChatBubble: View {
     enum Direction {
         case incoming
         case outgoing
+        
     }
     
     let content: String
@@ -22,28 +23,27 @@ struct ChatBubble: View {
     
     var body: some View {
         HStack {
-            if direction == .outgoing { Spacer() }
-            
-            VStack(alignment: .leading) {
-                image?
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 150, height: 150)
-                
-                Markdown(content)
-                    .markdownStyle(theme.markdownStyle(for: direction))
-                    .textSelection(.enabled)
-            }
-            .padding()
-            .background(bubbleBackground)
-            .clipShape(RoundedRectangle(cornerRadius: theme.messageCornerRadius))
-            .overlay(
-                RoundedRectangle(cornerRadius: theme.messageCornerRadius)
-                    .stroke(borderColor, lineWidth: 1)
-            )
-            
-            if direction == .incoming { Spacer() }
-        }
+                   if direction == .outgoing { Spacer() }
+                   
+                   VStack(alignment: .leading) {
+                       image?
+                           .resizable()
+                           .scaledToFit()
+                           .frame(width: 150, height: 150)
+                       
+                       Markdown(content)
+                           .markdownTheme(theme.markdownStyle(for: direction)) // Use instance property
+                   }
+                   .padding()
+                   .background(bubbleBackground)
+                   .clipShape(RoundedRectangle(cornerRadius: theme.messageCornerRadius))
+                   .overlay(
+                       RoundedRectangle(cornerRadius: theme.messageCornerRadius)
+                           .stroke(borderColor, lineWidth: 1)
+                   )
+                   
+                   if direction == .incoming { Spacer() }
+               }
     }
     
     private var bubbleBackground: some View {
@@ -60,4 +60,13 @@ struct ChatBubble: View {
     private var borderColor: Color {
         direction == .outgoing ? theme.accentColor : Color.gray.opacity(0.4)
     }
+}
+
+#Preview {
+    ChatBubble(
+        content: "Hello world",
+        direction: .outgoing,
+        image: nil
+    )
+    .environmentObject(ThemeManager.shared)
 }

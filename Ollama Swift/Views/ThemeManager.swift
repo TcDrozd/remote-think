@@ -4,39 +4,40 @@
 //
 //  Created by Trevor Drozd on 2/5/25.
 //
-
 import SwiftUI
+import MarkdownUI
 
 class ThemeManager: ObservableObject {
     static let shared = ThemeManager()
     
-    // MARK: - Message Styling
-    @Published var sentMessageBackground = Color.blue
-    @Published var receivedMessageBackground = Color(NSColor.secondarySystemFill)
     @Published var messageCornerRadius: CGFloat = 18
+    @Published var receivedMessageBackground = Color.gray.opacity(0.2)
+    @Published var sentMessageBackground = Color.blue
     @Published var accentColor = Color.blue
     
-    // MARK: - Markdown Styling
-    func markdownStyle(for direction: ChatBubble.Direction) -> MarkdownStyle {
+    func markdownStyle(for direction: ChatBubble.Direction) -> Theme {
         switch direction {
-        case .outgoing:
-            return MarkdownStyle(
-                text: .white,
-                code: .white.opacity(0.8),
-                codeBlockBackground: Color.white.opacity(0.1)
-            )
         case .incoming:
-            return MarkdownStyle(
-                text: .primary,
-                code: .secondary,
-                codeBlockBackground: Color.gray.opacity(0.1)
-            )
+            return Theme()
+                .text {
+                    ForegroundColor(.primary)
+                    FontSize(16)
+                }
+                .code {
+                    FontFamily(.custom("Menlo"))
+                    BackgroundColor(.gray.opacity(0.2))
+                }
+                
+        case .outgoing:
+            return Theme()
+                .text {
+                    ForegroundColor(.white)
+                    FontSize(16)
+                }
+                .code {
+                    FontFamily(.custom("Menlo"))
+                    BackgroundColor(.white.opacity(0.2))
+                }
         }
     }
-}
-
-struct MarkdownStyle {
-    let text: Color
-    let code: Color
-    let codeBlockBackground: Color
 }
