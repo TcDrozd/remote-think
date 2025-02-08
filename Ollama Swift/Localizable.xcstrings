@@ -407,6 +407,7 @@
 
     },
     "This is the start of your chat" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {

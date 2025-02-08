@@ -21,32 +21,37 @@ struct ChatView: View {
         {
             ScrollViewReader{ sv in
                 ScrollView {
-                    Text("This is the start of your chat")
+                    Text(verbatim: "This is the start of your chat")
                         .foregroundStyle(.secondary)
-                        .padding()
+                        .padding(.horizontal, 10)
                     ForEach(Array(chatController.sentPrompt.enumerated()), id: \.offset) { idx, sent in
-                        // Replace existing ChatBubble code with:
                         ChatBubble(
                             content: sent.trimmingCharacters(in: .whitespacesAndNewlines),
                             direction: .outgoing,
                             image: chatController.sentImages[idx]
                         )
-
+                        .padding(.all, 10)
+                        
                         ChatBubble(
                             content: chatController.receivedResponse.indices.contains(idx) ?
-                                chatController.receivedResponse[idx].trimmingCharacters(in: .whitespacesAndNewlines) : "...",
+                            chatController.receivedResponse[idx].trimmingCharacters(in: .whitespacesAndNewlines) : "...",
                             direction: .incoming,
                             image: nil
-                        )                    }
+                        )
+                        .padding(.all, 10)
+                    }
                     .animation(.spring(), value: chatController.sentPrompt)
                     Text("")
                         .id(bottomId)
                 }
                 .scrollIndicators(.visible) // macOS 13+
                 .scrollContentBackground(.hidden)
-                .onChange(of: chatController.receivedResponse.last) { _, _ in
-                    sv.scrollTo(bottomId)
-                    
+                .onChange(of: chatController.receivedResponse) { _, _ in
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        withAnimation(.easeOut(duration: 0.3)) {
+                            sv.scrollTo(bottomId, anchor: .bottom)
+                        }
+                    }
                 }
             }
             VStack{
@@ -86,7 +91,6 @@ struct ChatView: View {
                                     let path: String = result!.path
                                     chatController.photoPath = path
                                     // path contains the file path e.g
-                                    // /Users/ourcodeworld/Desktop/file.txt
                                 }
                                 
                             } else {

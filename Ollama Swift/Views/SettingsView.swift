@@ -59,7 +59,7 @@ struct GeneralSettingsView: View {
             }
         }
         .padding()
-        .frame(width: 550, height: 130)
+        .frame(minWidth: 550, minHeight: 130)
     }
 }
 

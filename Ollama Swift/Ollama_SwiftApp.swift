@@ -15,15 +15,15 @@ struct Ollama_SwiftApp: App {
                 .environmentObject(ThemeManager.shared)
         }
         .windowToolbarStyle(.unified(showsTitle: true))
-        .windowStyle(.titleBar)
+        .windowStyle(.automatic)
         
         #if os(macOS)
         Settings {
             SettingsView()
                 .frame(width: 550, height: 130)
         }
-        .windowToolbarStyle(.unified(showsTitle: false))
-        .windowStyle(.titleBar)
+        .windowToolbarStyle(.unified(showsTitle: true))
+        .windowStyle(.automatic)
         #endif
     }
 }
