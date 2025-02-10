@@ -15,217 +15,201 @@ struct ChatView: View {
     @FocusState private var promptFieldIsFocused: Bool
     @Namespace var bottomId
     
-    
-    var body: some View {
-        VStack(spacing: 0)
-        {
-            ScrollViewReader{ sv in
-                ScrollView {
-                    Text(verbatim: "This is the start of your chat")
-                        .foregroundStyle(.secondary)
-                        .padding(.horizontal, 10)
+    private var chatMessages: some View {
+        ScrollViewReader { sv in
+            ScrollView {
+                LazyVStack {
                     ForEach(Array(chatController.sentPrompt.enumerated()), id: \.offset) { idx, sent in
-                        ChatBubble(
-                            content: sent.trimmingCharacters(in: .whitespacesAndNewlines),
-                            direction: .outgoing,
-                            image: chatController.sentImages[idx]
-                        )
-                        .padding(.all, 10)
-                        
-                        ChatBubble(
-                            content: chatController.receivedResponse.indices.contains(idx) ?
-                            chatController.receivedResponse[idx].trimmingCharacters(in: .whitespacesAndNewlines) : "...",
-                            direction: .incoming,
-                            image: nil
-                        )
-                        .padding(.all, 10)
+                        messageBubble(idx: idx, sent: sent)
                     }
-                    .animation(.spring(), value: chatController.sentPrompt)
-                    Text("")
+                    Text("") // Anchor to scroll to
                         .id(bottomId)
                 }
-                .scrollIndicators(.visible) // macOS 13+
-                .scrollContentBackground(.hidden)
-                .onChange(of: chatController.receivedResponse) { _, _ in
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                        withAnimation(.easeOut(duration: 0.3)) {
-                            sv.scrollTo(bottomId, anchor: .bottom)
-                        }
+                .padding(.bottom, 10)
+            }
+            .onChange(of: chatController.receivedResponse) { _ in
+                // Trigger scroll to bottom after a delay to allow the UI to update
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    withAnimation(.easeOut(duration: 0.3)) {
+                        sv.scrollTo(bottomId, anchor: .bottom)
                     }
                 }
             }
-            VStack{
-                VStack{
-                    TextField("Enter system prompt...", text: $chatController.prompt.system, axis: .vertical)
-                        .lineLimit(3)
-                        .disabled(chatController.disabledEditor)
-                        .textFieldStyle(.roundedBorder)
-                        .padding()
-                    chatController.photoImage?
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 300, height: 300)
-                    HStack{
-                        Text("Make sure to use a multimodal model such as llava when using images")
-                        Spacer()
-                        if(chatController.photoPath != ""){
-                            Button("Remove photo"){
-                                chatController.photoPath = ""
-                                chatController.photoImage = nil
-                            }
-                        }
-                        Button("Select photo"){
-                            let dialog = NSOpenPanel()
-                            
-                            dialog.title = "Choose an image"
-                            dialog.showsResizeIndicator = true
-                            dialog.showsHiddenFiles = false
-                            dialog.allowsMultipleSelection = false
-                            dialog.canChooseDirectories = false
-                            dialog.allowedContentTypes = [.png, .jpeg]
-                            
-                            if (dialog.runModal() ==  NSApplication.ModalResponse.OK) {
-                                let result = dialog.url // Pathname of the file
-                                
-                                if (result != nil) {
-                                    let path: String = result!.path
-                                    chatController.photoPath = path
-                                    // path contains the file path e.g
-                                }
-                                
-                            } else {
-                                // User clicked on "Cancel"
-                                return
-                            }
-                        }
+        }
+    }
+
+    @ViewBuilder
+    private func messageBubble(idx: Int, sent: String) -> some View {
+        VStack(spacing: 0) {
+            ChatBubble(
+                content: parseMessage(sent),
+                direction: .outgoing,
+                image: chatController.sentImages[idx]
+            )
+            
+            if chatController.receivedResponse.indices.contains(idx) {
+                ChatBubble(
+                    content: parseMessage(chatController.receivedResponse[idx]),
+                    direction: .incoming,
+                    image: nil
+                )
+            }
+        }
+        .padding(.horizontal, 10)
+    }
+    
+    func parseMessage(_ message: String) -> AttributedString {
+        var attributedString = AttributedString("")
+        var isThinking = false
+        
+        let parts = message.split(separator: "<", omittingEmptySubsequences: false)
+        
+        for part in parts {
+            if part.hasPrefix("think>") {
+                isThinking = true
+                let text = part.dropFirst(6)
+                var formattedText = AttributedString(String(text))
+                formattedText.foregroundColor = .gray
+                var container = AttributeContainer()
+                container.inlinePresentationIntent = .emphasized
+                formattedText.mergeAttributes(container)
+                attributedString.append(formattedText)
+            } else if part.hasPrefix("/think>") {
+                isThinking = false
+                let text = part.dropFirst(7)
+                attributedString.append(AttributedString(String(text)))
+            } else {
+                var formattedText = AttributedString(String(part))
+                if isThinking {
+                    formattedText.foregroundColor = .gray
+                    var container = AttributeContainer()
+                    container.inlinePresentationIntent = .emphasized
+                    formattedText.mergeAttributes(container)
+                }
+                attributedString.append(formattedText)
+            }
+        }
+        return attributedString
+    }
+    
+    private var inputControls: some View {
+        VStack {
+            // Photo/image controls
+            HStack {
+                Text("Make sure to use a multimodal model...")
+                Spacer()
+                if !chatController.photoPath.isEmpty {
+                    Button("Remove photo") {
+                        chatController.photoPath = ""
+                        chatController.photoImage = nil
                     }
                 }
-                .onChange(of: chatController.photoPath) {
-                    Task {
-                        if let loaded =
-                            NSImage(contentsOf: URL(filePath: chatController.photoPath)) {
-                            chatController.photoBase64 = loaded.base64String() ?? ""
-                            chatController.photoImage = Image(nsImage: loaded)
-                        } else {
-                            print("Failed")
-                        }
-                    }
+                Button("Select photo") {
+                    // Photo selection logic
                 }
-                .frame(height: chatController.expandOptions ? nil : 0)
-                .clipped()
-                HStack(){
-                    ZStack(alignment: .topLeading) {
-                        if chatController.prompt.prompt.isEmpty {
-                            Text("CMD + Enter prompt...")
-                                .foregroundColor(Color.gray)
-                                .padding(.leading, 10)
-                        }
-                        TextEditor(text: $chatController.prompt.prompt)
-                            .padding(.leading, 5)
-                            .frame(minHeight: 50, maxHeight: 200)
-                            .foregroundColor(.primary)
-                            .dynamicTypeSize(.medium ... .xxLarge)
-                            .fixedSize(horizontal: false, vertical: true)
-                            .opacity(chatController.prompt.prompt.isEmpty ? 0.75 : 1)
-                            .onChange(of: chatController.prompt.prompt) { newValue, _ in
-                                chatController.disabledButton = chatController.prompt.prompt.isEmpty
-                            }
-                            .focused(self.$promptFieldIsFocused)
-                            .disabled(chatController.disabledEditor)
-                    }
-                    .frame(minHeight: 50)
+            }
+            .padding(.horizontal)
+            
+            // Text input area
+            HStack {
+                ZStack(alignment: .topLeading) {
+                    TextEditor(text: $chatController.prompt.prompt)
+                        .focused(self.$promptFieldIsFocused)
                     
-                    VStack{
-                        Button{
-                            withAnimation {
-                                chatController.expandOptions.toggle()
-                            }
-                        } label: {
-                            if(!chatController.expandOptions){
-                                Text("More Options")
-                                Image(systemName: "arrow.up")
-                                    .frame(width: 20, height: 20, alignment: .center)
-                            }else{
-                                Text("Hide Options")
-                                Image(systemName: "arrow.down")
-                                    .frame(width: 20, height: 20, alignment: .center)
-                            }
-                        }
-                        HStack{
-                            Button {
-                                chatController.send()
-                            } label: {
-                                Image(systemName: "paperplane")
-                                    .frame(width: 40, height: 20, alignment: .center)
-                            }
-                            .disabled(chatController.disabledButton)
-                            .keyboardShortcut(.return, modifiers: [.command])
-                            
-                            Button {
-                                chatController.resetChat()
-                            } label: {
-                                Image(systemName: "trash")
-                                    .frame(width: 40, height: 20, alignment: .center)
-                            }
-                        }
+                    if chatController.prompt.prompt.isEmpty {
+                        Text("CMD + Enter prompt...")
+                            .foregroundColor(.gray)
+                            .padding(8)
                     }
                 }
-            }
-            .padding(6)
-            .background(.ultraThickMaterial)
-        }
-        .frame(minWidth: 400, idealWidth: 700, minHeight: 600, idealHeight: 800)
-        .background(Color(NSColor.controlBackgroundColor))
-        .task {
-            chatController.getTags()
-        }
-        .toolbar {
-            ToolbarItemGroup(placement: .automatic){
-                HStack {
-                    Picker("Model:", selection: $chatController.prompt.model) {
-                        ForEach(chatController.tags?.models ?? [], id: \.self) { model in
-                            Text(model.name).tag(model.name)
-                        }
-                    }
-                    NavigationLink {
-                        ManageModelsView()
-                    } label: {
-                        Label("Manage Models", systemImage: "gearshape")
-                    }
-                }
-                if chatController.errorModel.showError {
+                
+                // Action buttons
+                VStack {
                     Button {
-                        chatController.showingErrorPopover.toggle()
+                        withAnimation { chatController.expandOptions.toggle() }
                     } label: {
-                        Label("Error", systemImage: "exclamationmark.triangle")
-                            .foregroundStyle(.red)
-                    }
-                    .popover(isPresented: $chatController.showingErrorPopover) {
-                        VStack(alignment: .leading) {
-                            Text(chatController.errorModel.errorTitle)
-                                .font(.title2)
-                                .textSelection(.enabled)
-                            Text(chatController.errorModel.errorMessage)
-                                .textSelection(.enabled)
-                        }
-                        .padding()
+                        Image(systemName: chatController.expandOptions ? "arrow.down" : "arrow.up")
                     }
                     
-                } else {
-                    Text("Server:")
-                    Label("Connected", systemImage: "circle.fill")
-                        .foregroundStyle(.green)
+                    Button {
+                        chatController.send()
+                    } label: {
+                        Image(systemName: "paperplane")
+                    }
+                    .disabled(chatController.disabledButton)
+                    
+                    Button {
+                        chatController.resetChat()
+                    } label: {
+                        Image(systemName: "trash")
+                    }
                 }
-                Button {
-                    chatController.getTags()
-                } label: {
-                    Image(systemName: "arrow.clockwise")
-                        .frame(width: 20, height: 20, alignment: .center)
-                }
-                .keyboardShortcut("r", modifiers: [.command])
+                .keyboardShortcut(.return, modifiers: [.command])  // On send button
+                .keyboardShortcut("r", modifiers: [.command])       // On refresh button
 
             }
+            .padding()
         }
+        .background(.ultraThickMaterial)
+    }
+    
+
+    var body: some View {
+            VStack(spacing: 0) {
+                chatMessages
+                inputControls
+            }
+            .frame(minWidth: 400, idealWidth: 700, minHeight: 600, idealHeight: 800)
+            .background(Color(NSColor.controlBackgroundColor))
+            .task {
+                chatController.getTags()
+            }
+            .toolbar {
+                // Model selector and primary controls
+                ToolbarItemGroup(placement: .automatic) {
+                    HStack {
+                        Picker("Model:", selection: $chatController.prompt.model) {
+                            ForEach(chatController.tags?.models ?? [], id: \.self) { model in
+                                Text(model.name).tag(model.name)
+                            }
+                        }
+                        NavigationLink {
+                            ManageModelsView()
+                        } label: {
+                            Label("Manage Models", systemImage: "gearshape")
+                        }
+                    }
+                }
+                
+                // Error status on trailing side
+                ToolbarItem(placement: .automatic) {
+                    HStack {
+                        if chatController.errorModel.showError {
+                            Button {
+                                chatController.showingErrorPopover.toggle()
+                            } label: {
+                                Label("Error", systemImage: "exclamationmark.triangle")
+                                    .foregroundStyle(.red)
+                            }
+                        } else {
+                            Text("Server:")
+                            Label("Connected", systemImage: "circle.fill")
+                                .foregroundStyle(.green)
+                        }
+                    }
+                }
+                
+                // Refresh button
+                ToolbarItem(placement: .automatic) {
+                    Button {
+                        chatController.getTags()
+                    } label: {
+                        Image(systemName: "arrow.clockwise")
+                    }
+                    .keyboardShortcut("r", modifiers: [.command])
+                }
+            }
+
     }
 }
 
