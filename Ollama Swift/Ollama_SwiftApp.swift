@@ -13,17 +13,15 @@ struct Ollama_SwiftApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(ThemeManager.shared)
+                .modelContainer(for: Conversation.self)
         }
         .windowToolbarStyle(.unified(showsTitle: true))
         .windowStyle(.automatic)
         
         #if os(macOS)
-        Settings {
-            SettingsView()
-                .frame(width: 550, height: 130)
-        }
-        .windowToolbarStyle(.unified(showsTitle: true))
-        .windowStyle(.automatic)
+        SettingsWindow()
+            .environmentObject(ThemeManager.shared)
         #endif
+        
     }
 }

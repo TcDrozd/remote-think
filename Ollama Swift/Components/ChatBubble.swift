@@ -60,3 +60,8 @@ struct ChatBubble: View {
         pasteboard.setString(text, forType: .string)
     }
 }
+
+#Preview {
+    ChatBubble(content: "Example", direction: .incoming, image: nil)
+        .environmentObject(ThemeManager.shared)
+}

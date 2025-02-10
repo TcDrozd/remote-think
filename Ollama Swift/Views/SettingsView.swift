@@ -8,18 +8,19 @@
 import SwiftUI
 
 struct SettingsView: View {
-    private enum Tabs: Hashable {
-            case general, models
-        }
-    
     var body: some View {
         TabView {
             GeneralSettingsView()
                 .tabItem {
                     Label("General", systemImage: "gear")
                 }
-                .tag(Tabs.general)
+
+            ModelSettingsView()
+                .tabItem {
+                    Label("Models", systemImage: "cube")
+                }
         }
+        .padding()
     }
 }
 
@@ -63,6 +64,11 @@ struct GeneralSettingsView: View {
     }
 }
 
+struct ModelSettingsView: View {
+    var body: some View {
+        Text("Model-specific settings go here.")
+    }
+}
 
 #Preview {
     SettingsView()

@@ -1,30 +1,51 @@
 //
-//  ContentView.swift
-//  Ollama Swift
+// ContentView.swift
+// Ollama Swift
 //
-//  Created by Karim ElGhandour on 14.10.23.
+// Created by Trevor Drozd on 2025.02.10
+//
 //
 
 import SwiftUI
+import SwiftData
 
 struct ContentView: View {
-    @StateObject var ollamaController = OllamaController()
+    @Environment(\.modelContext) private var modelContext
+    @Query private var conversations: [Conversation]
+    @State private var selectedConversation: Conversation?
     
     var body: some View {
-        NavigationView {
-            List {
-                NavigationLink("Chat", destination: ChatView())
-                NavigationLink("Settings", destination: SettingsView())
+        NavigationSplitView {
+            List(selection: $selectedConversation) {
+                ForEach(conversations) { conversation in
+                    NavigationLink {
+                        ChatView(conversation: conversation)
+                    } label: {
+                        VStack(alignment: .leading) {
+                            Text(conversation.title)
+                                .font(.headline)
+                            Text(conversation.lastMessagePreview)
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    .tag(conversation)
+                }
             }
-            .listStyle(SidebarListStyle()) // Ensures the list looks like a sidebar
-            
-            Text("Select an option")
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .toolbar {
+                Button(action: createNewConversation) {
+                    Label("New Chat", systemImage: "plus")
+                }
+            }
+            .navigationTitle("Chat History")
+        } detail: {
+            Text("Select a conversation")
         }
-        .navigationTitle("Ollama Swift")
     }
-}
-
-#Preview {
-    ContentView()
+    
+    private func createNewConversation() {
+        let newConversation = Conversation(title: "New Chat", timestamp: Date())
+        modelContext.insert(newConversation)
+        selectedConversation = newConversation
+    }
 }

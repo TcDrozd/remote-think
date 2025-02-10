@@ -6,15 +6,84 @@
 //
 
 import MarkdownUI
+import MarkdownUI
 import SwiftUI
 import PhotosUI
 
 struct ChatView: View {
+    let conversation: Conversation
     @StateObject var chatController = ChatController()
-    
+    @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) private var dismiss
+    @Environment(\.openWindow) private var openWindow  // New environment key for windows
+    @EnvironmentObject var theme: ThemeManager
+
     @FocusState private var promptFieldIsFocused: Bool
     @Namespace var bottomId
-    
+
+    var body: some View {
+        VStack(spacing: 0) {
+            chatMessages
+            inputControls
+        }
+        .frame(minWidth: 400, idealWidth: 700, minHeight: 600, idealHeight: 800)
+        .background(Color(NSColor.controlBackgroundColor))
+        .task { chatController.getTags() }
+        .toolbar {
+            // Model Picker and Manage Models
+            ToolbarItemGroup(placement: .automatic) {
+                HStack {
+                    Picker("Model:", selection: $chatController.prompt.model) {
+                        ForEach(chatController.tags?.models ?? [], id: \.self) { model in
+                            Text(model.name).tag(model.name)
+                        }
+                    }
+                    .pickerStyle(MenuPickerStyle())  // You can adjust the style if needed
+                    NavigationLink(destination: ManageModelsView()) {
+                        Label("Manage Models", systemImage: "gearshape")
+                    }
+                }
+            }
+            
+            // Settings Button
+            ToolbarItem(placement: .automatic) {
+                Button {
+                    openWindow(id: "settings")
+                } label: {
+                    Label("Settings", systemImage: "gearshape")
+                }
+            }
+            
+            // Error Status
+            ToolbarItem(placement: .automatic) {
+                HStack {
+                    if chatController.errorModel.showError {
+                        Button {
+                            chatController.showingErrorPopover.toggle()
+                        } label: {
+                            Label("Error", systemImage: "exclamationmark.triangle")
+                                .foregroundStyle(.red)
+                        }
+                    } else {
+                        Text("Server:")
+                        Label("Connected", systemImage: "circle.fill")
+                            .foregroundStyle(.green)
+                    }
+                }
+            }
+            
+            // Refresh Button
+            ToolbarItem(placement: .automatic) {
+                Button {
+                    chatController.getTags()
+                } label: {
+                    Image(systemName: "arrow.clockwise")
+                }
+                .keyboardShortcut("r", modifiers: [.command])
+            }
+        }
+    }
+
     private var chatMessages: some View {
         ScrollViewReader { sv in
             ScrollView {
@@ -40,13 +109,12 @@ struct ChatView: View {
 
     @ViewBuilder
     private func messageBubble(idx: Int, sent: String) -> some View {
-        VStack(spacing: 0) {
+        VStack(spacing: 2) {
             ChatBubble(
                 content: parseMessage(sent),
                 direction: .outgoing,
                 image: chatController.sentImages[idx]
             )
-            
             if chatController.receivedResponse.indices.contains(idx) {
                 ChatBubble(
                     content: parseMessage(chatController.receivedResponse[idx]),
@@ -61,9 +129,7 @@ struct ChatView: View {
     func parseMessage(_ message: String) -> AttributedString {
         var attributedString = AttributedString("")
         var isThinking = false
-        
         let parts = message.split(separator: "<", omittingEmptySubsequences: false)
-        
         for part in parts {
             if part.hasPrefix("think>") {
                 isThinking = true
@@ -96,16 +162,16 @@ struct ChatView: View {
         VStack {
             // Photo/image controls - collapsible
             VStack {
-                HStack{
+                HStack {
                     Text("Make sure to use a multimodal model such as llava when using images")
                     Spacer()
-                    if(chatController.photoPath != ""){
-                        Button("Remove photo"){
+                    if !chatController.photoPath.isEmpty {
+                        Button("Remove photo") {
                             chatController.photoPath = ""
                             chatController.photoImage = nil
                         }
                     }
-                    Button("Select photo"){
+                    Button("Select photo") {
                         let dialog = NSOpenPanel()
                         dialog.title = "Choose an image"
                         dialog.showsResizeIndicator = true
@@ -113,23 +179,15 @@ struct ChatView: View {
                         dialog.allowsMultipleSelection = false
                         dialog.canChooseDirectories = false
                         dialog.allowedContentTypes = [.png, .jpeg]
-                        if (dialog.runModal() == NSApplication.ModalResponse.OK) {
-                            let result = dialog.url // Pathname of the file
-                            if (result != nil) {
-                                let path: String = result!.path
-                                chatController.photoPath = path
-                                // path contains the file path e.g
-                            } else {
-                                // User clicked on "Cancel"
-                                return
-                            }
+                        if (dialog.runModal() == NSApplication.ModalResponse.OK),
+                           let result = dialog.url {
+                               chatController.photoPath = result.path
                         }
                     }
                 }
                 .onChange(of: chatController.photoPath) {
                     Task {
-                        if let loaded =
-                            NSImage(contentsOf: URL(filePath: chatController.photoPath)) {
+                        if let loaded = NSImage(contentsOf: URL(filePath: chatController.photoPath)) {
                             chatController.photoBase64 = loaded.base64String() ?? ""
                             chatController.photoImage = Image(nsImage: loaded)
                         } else {
@@ -140,14 +198,14 @@ struct ChatView: View {
             }
             .frame(height: chatController.expandOptions ? nil : 0)
             .clipped()
-            .padding(.horizontal)
+            .padding(.top, 10)
             
             // Text input area
             HStack {
                 ZStack(alignment: .topLeading) {
                     TextEditor(text: $chatController.prompt.prompt)
                         .padding(.leading, 5)
-                        .frame(minHeight: 50, idealHeight: 75, maxHeight: 200) // Added idealHeight
+                        .frame(minHeight: 50, idealHeight: 75, maxHeight: 200)
                         .foregroundColor(.primary)
                         .dynamicTypeSize(.medium ... .xxLarge)
                         .opacity(chatController.prompt.prompt.isEmpty ? 0.75 : 1)
@@ -186,73 +244,14 @@ struct ChatView: View {
                         Image(systemName: "trash")
                     }
                 }
-
             }
             .padding()
         }
         .background(.ultraThickMaterial)
     }
-    
-
-    var body: some View {
-            VStack(spacing: 0) {
-                chatMessages
-                inputControls
-            }
-            .frame(minWidth: 400, idealWidth: 700, minHeight: 600, idealHeight: 800)
-            .background(Color(NSColor.controlBackgroundColor))
-            .task {
-                chatController.getTags()
-            }
-            .toolbar {
-                // Model selector and primary controls
-                ToolbarItemGroup(placement: .automatic) {
-                    HStack {
-                        Picker("Model:", selection: $chatController.prompt.model) {
-                            ForEach(chatController.tags?.models ?? [], id: \.self) { model in
-                                Text(model.name).tag(model.name)
-                            }
-                        }
-                        NavigationLink {
-                            ManageModelsView()
-                        } label: {
-                            Label("Manage Models", systemImage: "gearshape")
-                        }
-                    }
-                }
-                
-                // Error status on trailing side
-                ToolbarItem(placement: .automatic) {
-                    HStack {
-                        if chatController.errorModel.showError {
-                            Button {
-                                chatController.showingErrorPopover.toggle()
-                            } label: {
-                                Label("Error", systemImage: "exclamationmark.triangle")
-                                    .foregroundStyle(.red)
-                            }
-                        } else {
-                            Text("Server:")
-                            Label("Connected", systemImage: "circle.fill")
-                                .foregroundStyle(.green)
-                        }
-                    }
-                }
-                
-                // Refresh button
-                ToolbarItem(placement: .automatic) {
-                    Button {
-                        chatController.getTags()
-                    } label: {
-                        Image(systemName: "arrow.clockwise")
-                    }
-                    .keyboardShortcut("r", modifiers: [.command])
-                }
-            }
-
-    }
 }
 
 #Preview {
-    ChatView()
+    let dummyConversation = Conversation(title: "Preview Chat", timestamp: Date())
+    ChatView(conversation: dummyConversation)
 }
