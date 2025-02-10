@@ -217,7 +217,6 @@
       }
     },
     "Make sure to use a multimodal model such as llava when using images" : {
-      "extractionState" : "stale",
       "localizations" : {
         "pt-BR" : {
           "stringUnit" : {
@@ -226,9 +225,6 @@
           }
         }
       }
-    },
-    "Make sure to use a multimodal model..." : {
-
     },
     "Manage Models" : {
       "localizations" : {

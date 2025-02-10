@@ -94,27 +94,68 @@ struct ChatView: View {
     
     private var inputControls: some View {
         VStack {
-            // Photo/image controls
-            HStack {
-                Text("Make sure to use a multimodal model...")
-                Spacer()
-                if !chatController.photoPath.isEmpty {
-                    Button("Remove photo") {
-                        chatController.photoPath = ""
-                        chatController.photoImage = nil
+            // Photo/image controls - collapsible
+            VStack {
+                HStack{
+                    Text("Make sure to use a multimodal model such as llava when using images")
+                    Spacer()
+                    if(chatController.photoPath != ""){
+                        Button("Remove photo"){
+                            chatController.photoPath = ""
+                            chatController.photoImage = nil
+                        }
+                    }
+                    Button("Select photo"){
+                        let dialog = NSOpenPanel()
+                        dialog.title = "Choose an image"
+                        dialog.showsResizeIndicator = true
+                        dialog.showsHiddenFiles = false
+                        dialog.allowsMultipleSelection = false
+                        dialog.canChooseDirectories = false
+                        dialog.allowedContentTypes = [.png, .jpeg]
+                        if (dialog.runModal() == NSApplication.ModalResponse.OK) {
+                            let result = dialog.url // Pathname of the file
+                            if (result != nil) {
+                                let path: String = result!.path
+                                chatController.photoPath = path
+                                // path contains the file path e.g
+                            } else {
+                                // User clicked on "Cancel"
+                                return
+                            }
+                        }
                     }
                 }
-                Button("Select photo") {
-                    // Photo selection logic
+                .onChange(of: chatController.photoPath) {
+                    Task {
+                        if let loaded =
+                            NSImage(contentsOf: URL(filePath: chatController.photoPath)) {
+                            chatController.photoBase64 = loaded.base64String() ?? ""
+                            chatController.photoImage = Image(nsImage: loaded)
+                        } else {
+                            print("Failed")
+                        }
+                    }
                 }
             }
+            .frame(height: chatController.expandOptions ? nil : 0)
+            .clipped()
             .padding(.horizontal)
             
             // Text input area
             HStack {
                 ZStack(alignment: .topLeading) {
                     TextEditor(text: $chatController.prompt.prompt)
+                        .padding(.leading, 5)
+                        .frame(minHeight: 50, idealHeight: 75, maxHeight: 200) // Added idealHeight
+                        .foregroundColor(.primary)
+                        .dynamicTypeSize(.medium ... .xxLarge)
+                        .opacity(chatController.prompt.prompt.isEmpty ? 0.75 : 1)
+                        .onChange(of: chatController.prompt.prompt) { newValue, _ in
+                            chatController.disabledButton = chatController.prompt.prompt.isEmpty
+                        }
                         .focused(self.$promptFieldIsFocused)
+                        .disabled(chatController.disabledEditor)
                     
                     if chatController.prompt.prompt.isEmpty {
                         Text("CMD + Enter prompt...")
@@ -137,6 +178,7 @@ struct ChatView: View {
                         Image(systemName: "paperplane")
                     }
                     .disabled(chatController.disabledButton)
+                    .keyboardShortcut(.return, modifiers: [.command])
                     
                     Button {
                         chatController.resetChat()
@@ -144,8 +186,6 @@ struct ChatView: View {
                         Image(systemName: "trash")
                     }
                 }
-                .keyboardShortcut(.return, modifiers: [.command])  // On send button
-                .keyboardShortcut("r", modifiers: [.command])       // On refresh button
 
             }
             .padding()
