@@ -22,13 +22,21 @@ struct ChatView: View {
     @Namespace var bottomId
 
     var body: some View {
+        Text("Conversation ID: \(conversation.id.uuidString)") // ddebugging
+        Text("Messages Count: \(conversation.messages.count)")
+        
         VStack(spacing: 0) {
             chatMessages
             inputControls
         }
+        .task {
+            print("ChatView opened for: \(conversation.title)")
+            print("Message count: \(conversation.messages.count)")
+        }
         .frame(minWidth: 400, idealWidth: 700, minHeight: 600, idealHeight: 800)
         .background(Color(NSColor.controlBackgroundColor))
         .task { chatController.getTags() }
+        
         .toolbar {
             // Model Picker and Manage Models
             ToolbarItemGroup(placement: .automatic) {

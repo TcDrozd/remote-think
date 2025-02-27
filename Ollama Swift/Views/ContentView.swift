@@ -18,9 +18,7 @@ struct ContentView: View {
         NavigationSplitView {
             List(selection: $selectedConversation) {
                 ForEach(conversations) { conversation in
-                    NavigationLink {
-                        ChatView(conversation: conversation)
-                    } label: {
+                    NavigationLink(destination: ChatView(conversation: conversation)) {
                         VStack(alignment: .leading) {
                             Text(conversation.title)
                                 .font(.headline)
@@ -32,12 +30,10 @@ struct ContentView: View {
                     .tag(conversation)
                 }
             }
-            .toolbar {
-                Button(action: createNewConversation) {
-                    Label("New Chat", systemImage: "plus")
-                }
+            .navigationDestination(for: Conversation.self) { conversation in
+                
+                ChatView(conversation: conversation)
             }
-            .navigationTitle("Chat History")
         } detail: {
             Text("Select a conversation")
         }
@@ -46,6 +42,10 @@ struct ContentView: View {
     private func createNewConversation() {
         let newConversation = Conversation(title: "New Chat", timestamp: Date())
         modelContext.insert(newConversation)
-        selectedConversation = newConversation
+        
+        Task { @MainActor in
+            try? modelContext.save()  // Save immediately
+            selectedConversation = newConversation
+        }
     }
 }

@@ -72,9 +72,6 @@
         }
       }
     },
-    "Chat History" : {
-
-    },
     "CMD + Enter prompt..." : {
 
     },
@@ -274,9 +271,6 @@
           }
         }
       }
-    },
-    "New Chat" : {
-
     },
     "New Name" : {
       "localizations" : {

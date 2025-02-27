@@ -11,10 +11,10 @@ import SwiftUI
 
 @Model
 final class Conversation: Identifiable {
-    @Attribute(.unique) let id = UUID()
+    @Attribute(.unique) var id: UUID = UUID()
     var title: String
     var timestamp: Date
-    var messages: [Message] = []
+    @Relationship(deleteRule: .cascade) var messages: [Message] = []
     
     init(title: String, timestamp: Date) {
         self.title = title
@@ -22,6 +22,7 @@ final class Conversation: Identifiable {
     }
     
     var lastMessagePreview: String {
+        print("Conversation: \(title), Messages Count: \(messages.count)")
         if let lastMessage = messages.last {
             return lastMessage.content // Assuming Message has a content property
         } else {
@@ -41,5 +42,6 @@ class Message {
         self.content = content
         self.timestamp = timestamp
         self.isFromUser = isFromUser
+        self.conversation = conversation
     }
 }

@@ -91,6 +91,7 @@ class ChatController: ObservableObject{
                 self.receivedResponse.append("")
                 
                 print("Sending request")
+                print("Saving message: \(newMessage.text) to conversation ID: \(conversation.id.uuidString)")
                 let endpoint = ollamaController.apiAddress + "/api/chat"
                 
                 guard let url = URL(string: endpoint) else {
